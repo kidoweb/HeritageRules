@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heritage SW:RP - Правила сервера</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="shortcut icon" type="image/png" href="icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Фон Республики */
+        .republic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: 
+                /* Затемнение для лучшей читаемости */
+                linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.5) 100%),
+                /* Фоновое изображение - позиционирование для видимости человека */
+                url('446641.jpg') center 0% / cover no-repeat fixed;
+            background-attachment: fixed;
+        }
+
+        @media (max-width: 1200px) {
+            .republic-background {
+                background-position: center 50%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .republic-background {
+                background-position: center 40%;
+                background-size: cover;
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Силуэты космических кораблей */
+        .spaceships {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15;
+            background-image: 
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M50 100 L150 100 L120 80 L130 100 L120 120 Z" fill="%2300aaff" opacity="0.4"/></svg>');
+            background-size: 300px 300px;
+            background-repeat: repeat;
+            background-position: 0 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 12px;
+        }
+
+        /* Заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 0;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .logo-container {
+            margin-bottom: -15px;
+            margin-top: 0;
+            line-height: 0;
+        }
+
+        .logo {
+            max-width: 650px;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 20px rgba(0, 170, 255, 0.6));
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .logo:hover {
+            filter: drop-shadow(0 0 30px rgba(0, 170, 255, 0.9));
+            transform: scale(1.05);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ffffff;
+            letter-spacing: 2px;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 0;
+        }
+
+        /* Секции правил */
+        .rules-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00aaff;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 170, 255, 0.3);
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            filter: drop-shadow(0 0 5px #00aaff);
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .rule-box {
+            background: rgba(10, 14, 39, 0.8);
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 
+                0 0 15px rgba(0, 170, 255, 0.3),
+                inset 0 0 15px rgba(0, 170, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .rule-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 25px rgba(0, 170, 255, 0.5),
+                inset 0 0 20px rgba(0, 170, 255, 0.2);
+        }
+
+        .rule-box.full-width {
+            grid-column: span 2;
+        }
+
+        .rule-box.important {
+            border-color: #ff4444;
+            background: rgba(39, 10, 10, 0.8);
+            box-shadow: 
+                0 0 15px rgba(255, 68, 68, 0.3),
+                inset 0 0 15px rgba(255, 68, 68, 0.1);
+        }
+
+        .rule-box.important:hover {
+            box-shadow: 
+                0 0 25px rgba(255, 68, 68, 0.5),
+                inset 0 0 20px rgba(255, 68, 68, 0.2);
+        }
+
+        .rule-box.admin {
+            border-color: #ffaa00;
+            background: rgba(39, 27, 10, 0.8);
+            box-shadow: 
+                0 0 15px rgba(255, 170, 0, 0.3),
+                inset 0 0 15px rgba(255, 170, 0, 0.1);
+        }
+
+        .rule-box.admin:hover {
+            box-shadow: 
+                0 0 25px rgba(255, 170, 0, 0.5),
+                inset 0 0 20px rgba(255, 170, 0, 0.2);
+        }
+
+        .rule-list {
+            list-style: none;
+        }
+
+        .rule-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            line-height: 1.7;
+            border-bottom: 1px solid rgba(0, 170, 255, 0.2);
+            font-size: 0.95rem;
+        }
+
+        .rule-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rule-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #00aaff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .rule-box.important .rule-list li {
+            border-bottom-color: rgba(255, 68, 68, 0.2);
+        }
+
+        .rule-box.important .rule-list li::before {
+            color: #ff4444;
+        }
+
+        .rule-box.admin .rule-list li {
+            border-bottom-color: rgba(255, 170, 0, 0.2);
+        }
+
+        .rule-box.admin .rule-list li::before {
+            color: #ffaa00;
+        }
+
+        .rule-number {
+            color: #00aaff;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .rule-box.important .rule-number {
+            color: #ff4444;
+        }
+
+        .rule-box.admin .rule-number {
+            color: #ffaa00;
+        }
+
+        .punishment {
+            color: #ffaa00;
+            font-style: italic;
+            margin-left: 5px;
+        }
+
+        .additional-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 170, 255, 0.1);
+            border-left: 3px solid #00aaff;
+            border-radius: 4px;
+        }
+
+        .additional-info-title {
+            color: #00aaff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Поиск */
+        .search-container {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(10, 14, 39, 0.9);
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 15px rgba(0, 170, 255, 0.3),
+                inset 0 0 15px rgba(0, 170, 255, 0.1);
+        }
+
+        .search-input:focus {
+            box-shadow: 
+                0 0 25px rgba(0, 170, 255, 0.5),
+                inset 0 0 20px rgba(0, 170, 255, 0.2);
+            border-color: #00ccff;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-results {
+            margin-top: 15px;
+            text-align: center;
+            color: #00aaff;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+        .rules-section.hidden {
+            display: none;
+        }
+
+        .rule-box.hidden {
+            display: none;
+        }
+
+        .rule-list li.hidden {
+            display: none;
+        }
+
+        .highlight {
+            background: rgba(255, 255, 0, 0.3);
+            color: #ffff00;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Футер */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 20px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            border-top: 1px solid rgba(0, 170, 255, 0.3);
+            background: rgba(10, 14, 39, 0.3);
+            border-radius: 8px 8px 0 0;
+        }
+
+        .footer-title {
+            font-size: 1rem;
+            color: #00aaff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(0, 170, 255, 0.5);
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            color: #b0b0b0;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-disclaimer p {
+            margin: 8px 0;
+        }
+
+        .footer-copyright {
+            font-size: 0.8rem;
+            color: #888888;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 170, 255, 0.2);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .rules-grid {
+                grid-template-columns: 1fr;
+            }
+            .rule-box.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                max-width: 400px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+            .footer {
+                padding: 20px 15px;
+                margin-top: 40px;
+            }
+            .footer-title {
+                font-size: 0.9rem;
+            }
+            .footer-disclaimer {
+                font-size: 0.8rem;
+                line-height: 1.6;
+            }
+            .footer-disclaimer p {
+                margin: 6px 0;
+            }
+            .footer-copyright {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="republic-background"></div>
+    <div class="spaceships"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="logo.png" alt="Heritage SW:RP Logo" class="logo">
+            </div>
+            <p class="subtitle">ОФИЦИАЛЬНЫЕ ПРАВИЛА СЕРВЕРА</p>
+        </div>
+
+        <!-- Поиск -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="Поиск по правилам...">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+
+        <!-- 0. Основные правила -->
+        <div class="rules-section">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                0. ОСНОВНЫЕ ПРАВИЛА
+            </h2>
+            <div class="rules-grid">
+                <div class="rule-box full-width">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">0.1</span> – Незнание правил не освобождает от ответственности.</li>
+                        <li><span class="rule-number">0.2</span> – Играя на сервере, Вы соглашаетесь со всеми установленными правилами.</li>
+                        <li><span class="rule-number">0.3</span> – Высшая администрация проекта имеет право выносить вердикт, не соответствующий этим правилам.</li>
+                        <li><span class="rule-number">0.4</span> – Запрещено обсуждать действия высшей администрации. <span class="punishment">[Наказание - Решение основателя]</span></li>
+                        <li><span class="rule-number">0.5</span> – Деньги, потраченные на платные услуги, не возвращаются.</li>
+                        <li><span class="rule-number">0.6</span> – Запрещено выдавать себя за представителей администрации, а также использовать их (или похожие) никнеймы.</li>
+                        <li><span class="rule-number">0.7</span> – Запрещена реклама других проектов, сайтов и т.п. в любом её виде (чат, никнейм, TextScreen и т.д.). <span class="punishment">[Наказание - Ban perma]</span></li>
+                        <li><span class="rule-number">0.8</span> – Запрещен обход бана любым путем, в том числе и созданием новых аккаунтов Steam. <span class="punishment">[Наказание - Ban perma]</span></li>
+                        <li><span class="rule-number">0.9</span> – Продажа игровой валюты и предметов за реальные деньги. <span class="punishment">[Наказание - Махинации]</span></li>
+                        <li><span class="rule-number">0.10</span> – Запрещен НРП и РП развод игроков на деньги и предметы. <span class="punishment">[Наказание - Махинации]</span></li>
+                        <li><span class="rule-number">0.11</span> – Данные правила могут изменяться без оповещения игроков сервера.</li>
+                        <li><span class="rule-number">0.12</span> – Запрещено использовать ошибки и недочеты (баги) проекта или игры в свою пользу или пользу третьих лиц. <span class="punishment">[Наказание - BugAbuse/BA]</span></li>
+                        <li><span class="rule-number">0.13</span> – Запрещен намеренный обман игрока и/или администратора сервера с целью получения выгоды. <span class="punishment">[Наказание - Махинации]</span></li>
+                        <li><span class="rule-number">0.14</span> – Игрокам запрещено угрожать расправой в жизни. <span class="punishment">[Наказание - Ban 24h]</span></li>
+                        <li><span class="rule-number">0.15</span> – Запрещено сливать переписки/разговоры с высшей администрацией сервера.</li>
+                        <li><span class="rule-number">0.16</span> – Донат - это не покупка чего-либо, а добровольное пожертвование, за счет чего Вы можете получить "благодарность" от нас в виде привилегии или иного бонуса.</li>
+                        <li><span class="rule-number">0.17</span> – В случае нарушения правил сервера основатель имеет право обнулить ваш аккаунт без предупреждения.</li>
+                        <li><span class="rule-number">0.18</span> – На любой permaban у администратора должны быть объективные доказательства и хранится в течение недели с момента выдачи такого наказания.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 1. Правила Roleplay -->
+        <div class="rules-section">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 8V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 12H4C2.9 12 2 12.9 2 14V16C2 17.1 2.9 18 4 18H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16 12H20C21.1 12 22 12.9 22 14V16C22 17.1 21.1 18 20 18H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                1. ПРАВИЛА ROLEPLAY
+            </h2>
+            <div class="rules-grid">
+                <div class="rule-box">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">1.1</span> - NonRP - Во время игрового процесса вы должны сопоставлять свои действия с реальной жизнью. <span class="punishment">(Ban 1h / 3h / 1d)</span></li>
+                        <li><span class="rule-number">1.2</span> - LeaveRP - Запрещено ливать с жалобы или выходить с сервера для избежания наказания. Также запрещено выходить с сервера во избежание РП ситуации <span class="punishment">(Ban 1h / 1d / 1w)</span></li>
+                        <li><span class="rule-number">1.3</span> - FreeDamage/FDMG — Запрещено нанесение урона игроку без особой на то причины. Случайный урон, полученный во время перестрелки двух сторон, невинной жертвой не рассчитывается как FreeDamage. <span class="punishment">(Ban 30mi / 3h / 1d)</span></li>
+                        <li><span class="rule-number">1.4</span> - FreeKill — Запрещено убийство 1-2 игроков без особой на то причины. Во время перестрелки не исключен фактор убийства невиновных. Это не рассчитывается как FK. <span class="punishment">(Ban 1d / 3d / 1w)</span></li>
+                        <li><span class="rule-number">1.5</span> - MassRDM - Убийство 3х и более игроков без причины <span class="punishment">(Ban 1w / 1m / Perm)</span></li>
+                        <li><span class="rule-number">1.6</span> - FearRP - Вы должны бояться за свою жизнь, и всего что ей угрожает. <span class="punishment">(Ban 1h / 3h / 1d)</span></li>
+                    </ul>
+                </div>
+                <div class="rule-box">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">1.7</span> - NLR - после смерти вам запрещено возвращаться на место смерти в течении 5ти минут <span class="punishment">(Ban 30mi / 1h / 3h)</span></li>
+                        <li><span class="rule-number">1.8</span> - BodyBlock - запрещено блокировать проходы своим телом <span class="punishment">(ban 1h / 3h / 1d)</span></li>
+                        <li><span class="rule-number">1.9</span> - MetaGaming - запрещено использовать полученную НРП путем информацию в РП ситуациях <span class="punishment">(ban 1h / 3h / 1d)</span></li>
+                        <li><span class="rule-number">1.10</span> - FreeCuff — Запрещено надевать наручники на игроков без особой на то причины. <span class="punishment">(Ban 30mi / 1h / 3h)</span></li>
+                        <li><span class="rule-number">1.11</span> - SpawnKill - запрещено убивать игроков в зоне их возрождения <span class="punishment">(Ban 1d / 3d / 1w)</span></li>
+                        <li><span class="rule-number">1.12</span> - NrpTime - с 00.00 по 08.00 по МСК действует НРП тайм - вы можете совершать незначительные РП нарушения и админстрация может закрыть на это глаза, за значительные нарушения последует наказание <span class="punishment">(Ban 1h / 3h / 1d)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Правила чата -->
+        <div class="rules-section">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 9H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 13H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                2. ПРАВИЛА ЧАТА
+            </h2>
+            <div class="rules-grid">
+                <div class="rule-box">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">2.1</span> OSA - оскорбление игрока в нрп чате <span class="punishment">(Mute/Gag 30mi / Ban 1h / Ban 1d)</span></li>
+                        <li><span class="rule-number">2.2</span> OSAdm - Оскорбление администрации проекта в нрп чате <span class="punishment">(Ban 1h / 3h / 1d)</span></li>
+                        <li><span class="rule-number">2.3</span> OSS - Оскорбление сервера в любом формате <span class="punishment">(Ban 1w - Perm)</span></li>
+                        <li><span class="rule-number">2.4</span> OSAR - Оскорбление или упоминание родителей/родственников игрока в любом формате <span class="punishment">(Ban 1w - 6m)</span></li>
+                        <li><span class="rule-number">2.5</span> РМР - Разжигание межнациональной розни <span class="punishment">(Ban 1w - Perm)</span></li>
+                    </ul>
+                    <div class="additional-info">
+                        <div class="additional-info-title">Дополнительно:</div>
+                        <p>Рп отыгровки (/me./do) Можно делать через голосовой чат, для этого нужно начать с фразы (рп действие... или me (действие)...)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Отдельные правила -->
+        <div class="rules-section">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                3. ОТДЕЛЬНЫЕ ПРАВИЛА
+            </h2>
+            <div class="rules-grid">
+                <div class="rule-box">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">3.1</span> BugAbuse - использование игровых ошибок/недочётов в свою пользу <span class="punishment">(Ban 3d / 1w / 1m)</span></li>
+                        <li><span class="rule-number">3.2</span> Махинации - Попытка обмана игрока в нрп формате / администрации <span class="punishment">(Ban 3d / 1w / 1m)</span></li>
+                        <li><span class="rule-number">3.3</span> Cheats - использование стороннего ПО, дающее преимущество над игроками <span class="punishment">(Ban Perm)</span></li>
+                        <li><span class="rule-number">3.4</span> Неадекват - неадекватное поведение в НРП формате <span class="punishment">(Ban 1d - Perm)</span></li>
+                    </ul>
+                </div>
+                <div class="rule-box">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">3.5</span> ПКС - попытка краша сервера <span class="punishment">(Ban 1m - Perm)</span></li>
+                        <li><span class="rule-number">3.6</span> Помеха - попытка помешать проведению разборки/ивента <span class="punishment">(Ban 1d - 1w)</span></li>
+                        <li><span class="rule-number">3.7</span> Рецидив - Нарушение 5ти и более правил за 1 игровой сеанс <span class="punishment">(Ban 1w - 1m)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Правила Администрации -->
+        <div class="rules-section">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                4. ПРАВИЛА АДМИНИСТРАЦИИ
+            </h2>
+            <div class="rules-grid">
+                <div class="rule-box admin">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">4.1</span> AdminAbuse — Превышение полномочий своей привилегии, либо использование ее в корыстных целей. <span class="punishment">(Ban 1d - Perm)</span></li>
+                        <li><span class="rule-number">4.2</span> Запрещено удалять/передвигать пропы игроков без адекватной на то причины. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.3</span> Запрещено быть неадекватным в NONRP моде/профессии. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.4</span> Запрещено разбираться в РП зоне/РП профессии. Наказание <span class="punishment">[AdminAbuse+Pred]</span> Исключение: Высшая администрация.</li>
+                        <li><span class="rule-number">4.5</span> Запрещено использовать админ возможности в РП профессии. Наказание <span class="punishment">[AdminAbuse+Warn]</span> Исключение: Высшая администрация</li>
+                        <li><span class="rule-number">4.6</span> Запрещено вмешиваться в РП (Исключение: Игрок сидит в тюрьме) и жалобы (разборки) других админов. Перед телепортацией игрока убедитесь, что он НЕ участвует в РП процессе. Если вы не уверены, то в cloak-режиме телепортируйтесь к нему и предупредите о телепортировании на жалобу. Наказание <span class="punishment">[AdminAbuse+Warn]</span>.</li>
+                        <li><span class="rule-number">4.7</span> Запрещено нарушать лимиты наказаний. Наказание <span class="punishment">[AdminAbuse+Warn]</span> Исключение: Высшая администрация.</li>
+                        <li><span class="rule-number">4.8</span> Запрещена халатность при администрировании/игнорирование жалобы игроков и снисходительно относиться к нарушениям. Наказание <span class="punishment">[AdminAbuse+Warn]</span> (Исключение: Игрок простил нарушителя причинившего вред только ему)</li>
+                        <li><span class="rule-number">4.9</span> Запрещено выдавать наказания без причины, доказательств или по личным причинам, или банить/кикать с некорректной причиной. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.10</span> Запрещено угрожать наказанием игрокам. Наказание <span class="punishment">[AdminAbuse+Pred]</span></li>
+                    </ul>
+                </div>
+                <div class="rule-box admin">
+                    <ul class="rule-list">
+                        <li><span class="rule-number">4.11</span> Запрещено намеренно игнорировать старших по рангу администраторов. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.12</span> Запрещено разбирать свои жалобы (если вы участвовали в РП процессе с нарушителем) и поданные на вас жалобы. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.13</span> Запрещено находиться в RP зоне без cloak-режима в профессии администратора. Наказание <span class="punishment">[AdminAbuse+Pred]</span></li>
+                        <li><span class="rule-number">4.14</span> Запрещено находиться и телепортировать игроков в SkyBox. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.15</span> Администратору запрещено стоять AFK за NONRP профессию более 30 минут. Наказание <span class="punishment">[AdminAbuse+Pred]</span></li>
+                        <li><span class="rule-number">4.16</span> Запрещено выдавать наказания и разбирать жалобы относящиеся к правилам раздела "Правила Администрации" (Если администратор по вашему мнению не прав, записывайте Видео/Скриншоты и подайте жалобу в дискорд). Наказание <span class="punishment">[AdminAbuse+Warn]</span> Исключение: Старшая администрация +</li>
+                        <li><span class="rule-number">4.17</span> Администрации запрещено нарушать более 3-х правил RP режима за сутки (24 часа). Наказание <span class="punishment">[Warn/Pred]</span></li>
+                        <li><span class="rule-number">4.18</span> Запрещено себе не выдавать наказание на жалобе по решению администратора (Если нарушение было подтверждено). Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.19</span> Запрещено превышать полномочия установленной для вас привилегии (выдача себе хп/брони больше чем задумано системой и т.п.). Пояснение: Если админ нарушил любое правило, перечисленное в "правилах администрирования" и получил за него наказание, то это правило не может использоваться в качестве дополнительного наказания по одному и тому же нарушению, дабы увеличить количество варнов у админа. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                        <li><span class="rule-number">4.20</span> Запрещено разбанивать игроков без адекватной причины, а если причина имеется, то она должна указываться корректно, например "перебан", "ошибка" и т.п. Наказание <span class="punishment">[AdminAbuse+Warn]</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-title">Garry's Mod Heritage SW:RP Server</div>
+            <div class="footer-disclaimer">
+                <p>Этот сервер и его администрация не связаны с Garry's Mod, Valve, Facepunch Studios, Lucasfilm Ltd, Disney или любым из владельцев прав на вселенную "Звёздные Войны".</p>
+                <p>Все права на контент, торговые марки и персонажей принадлежат их законным владельцам.</p>
+                <p>Вся информация, размещённая на данном сервере и сайте, носит исключительно развлекательный характер.</p>
+                <p>Пользователь, заходя на сервер, соглашается с обработкой персональных данных, внутренними правилами проекта и публичной офертой.</p>
+                <p>В случае претензий по авторскому праву, просьба связаться с администрацией сервера.</p>
+            </div>
+            <div class="footer-copyright">© 2026 Heritage SW:RP. Все права защищены.</div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const rulesSections = document.querySelectorAll('.rules-section');
+        const ruleBoxes = document.querySelectorAll('.rule-box');
+        const ruleItems = document.querySelectorAll('.rule-list li');
+
+        // Сохраняем оригинальный текст для восстановления
+        const originalTexts = new Map();
+        ruleItems.forEach(item => {
+            originalTexts.set(item, item.innerHTML);
+        });
+
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function searchRules(searchTerm) {
+            if (!searchTerm.trim()) {
+                // Очистка поиска
+                ruleItems.forEach(item => {
+                    item.innerHTML = originalTexts.get(item);
+                    item.classList.remove('hidden');
+                });
+                ruleBoxes.forEach(box => box.classList.remove('hidden'));
+                rulesSections.forEach(section => section.classList.remove('hidden'));
+                searchResults.textContent = '';
+                return;
+            }
+            let totalMatches = 0;
+            let visibleSections = 0;
+            let visibleBoxes = 0;
+
+            // Поиск по правилам
+            rulesSections.forEach(section => {
+                let sectionHasMatches = false;
+                const sectionBoxes = section.querySelectorAll('.rule-box');
+
+                sectionBoxes.forEach(box => {
+                    let boxHasMatches = false;
+                    const boxItems = box.querySelectorAll('.rule-list li');
+
+                    boxItems.forEach(item => {
+                        const originalText = originalTexts.get(item);
+                        const searchLower = searchTerm.toLowerCase();
+                        const textLower = originalText.toLowerCase();
+
+                        if (textLower.includes(searchLower)) {
+                            // Найдено совпадение
+                            item.innerHTML = highlightText(originalText, searchTerm);
+                            item.classList.remove('hidden');
+                            boxHasMatches = true;
+                            sectionHasMatches = true;
+                            totalMatches++;
+                        } else {
+                            // Нет совпадения
+                            item.classList.add('hidden');
+                        }
+                    });
+
+                    // Показываем/скрываем блок
+                    if (boxHasMatches) {
+                        box.classList.remove('hidden');
+                        visibleBoxes++;
+                    } else {
+                        box.classList.add('hidden');
+                    }
+                });
+
+                // Показываем/скрываем секцию
+                if (sectionHasMatches) {
+                    section.classList.remove('hidden');
+                    visibleSections++;
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+
+            // Обновляем результаты поиска
+            if (totalMatches > 0) {
+                searchResults.textContent = `Найдено совпадений: ${totalMatches}`;
+                searchResults.style.color = '#00aaff';
+            } else {
+                searchResults.textContent = 'Совпадений не найдено';
+                searchResults.style.color = '#ff4444';
+            }
+
+            // Прокрутка к первому результату
+            const firstVisible = document.querySelector('.rule-list li:not(.hidden)');
+            if (firstVisible) {
+                firstVisible.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Обработчик ввода
+        searchInput.addEventListener('input', (e) => {
+            searchRules(e.target.value);
+        });
+
+        // Обработчик клавиши Escape
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchRules('');
+            }
+        });
+
+        // Сохранение поискового запроса в URL (опционально)
+        const urlParams = new URLSearchParams(window.location.search);
+        const savedSearch = urlParams.get('search');
+        if (savedSearch) {
+            searchInput.value = savedSearch;
+            searchRules(savedSearch);
+        }
+    </script>
+</body>
+</html>
